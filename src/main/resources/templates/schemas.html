@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head th:include="head :: head">
+    <title id="pageTitle">Database Schemas</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.name}">Database Connection:</h2>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/connections">Database Connection Management</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a th:href="@{'/connections/' + ${connection.id}}" th:text="${connection.name}"></a></li>
+            <li class="breadcrumb-item active" aria-current="page">Schemas</li>
+        </ol>
+    </nav>
+</div>
+<div class="container">
+</div>
+</body>
+</html>

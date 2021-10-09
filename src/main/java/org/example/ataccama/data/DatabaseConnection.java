@@ -1,28 +1,30 @@
 package org.example.ataccama.data;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @ToString
-public class DatabaseConnection implements Patchable<DatabaseConnection>, Serializable {
+public class DatabaseConnection {
     public static final String NAME_COLUMN = "name";
     public static final String HOST_COLUMN = "host";
     public static final String DATABASE_COLUMN = "database";
@@ -33,6 +35,9 @@ public class DatabaseConnection implements Patchable<DatabaseConnection>, Serial
 
     @Column(nullable = false, name = NAME_COLUMN)
     private String name;
+
+    @Column(nullable = false)
+    private DatabaseType type;
 
     @Column(nullable = false, name = HOST_COLUMN)
     private String host;
@@ -48,20 +53,8 @@ public class DatabaseConnection implements Patchable<DatabaseConnection>, Serial
     private String password;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
-    private LocalDate updatedAt;
-
-    @Override
-    public DatabaseConnection patch(DatabaseConnection that) {
-        final DatabaseConnection merged = SerializationUtils.clone(this);
-        merged.name = that.name;
-        merged.host = that.host;
-        merged.port = that.port;
-        merged.database = that.database;
-        merged.username = that.username;
-        merged.password = that.password;
-        return merged;
-    }
+    private Instant updatedAt;
 }

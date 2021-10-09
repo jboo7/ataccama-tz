@@ -1,97 +1,80 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head th:include="head :: head">
-    <title id="pageTitle">Database Connection Management</title>
+    <title id="pageTitle">Database Connection</title>
 </head>
 <body>
-<script>
-    function deleteConnection(id) {
-        $.ajax({
-            url: '/connection/' + id,
-            type: 'DELETE'
-        })
-            .done(function (data) {
-                location.href = '/connection'
-                console.log(data)
-            })
-    }
-</script>
 <div class="jumbotron">
-    <h2 class="display-4">Database Connection Management</h2>
-    <a href="/" class="btn btn-primary">Home</a>
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.name}">Database Connection:</h2>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/connections">Database Connection Management</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${connection.name}"></li>
+        </ol>
+    </nav>
 </div>
 <div class="container">
     <div class="row">
         <div class="col">
-            <p>
-                <a class="btn btn-secondary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false"
-                   aria-controls="multiCollapseExample1">Create a Database Connection</a>
-            </p>
-            <div class="collapse multi-collapse" id="multiCollapseExample1">
-                <div class="card card-body">
-                    <form action="#" th:action="@{/connection}" th:object="${connection}" method="post">
-                        <div class="form-group">
-                            <label for="nameInput">Name of the Database Connection</label>
-                            <input type="text" class="form-control" id="nameInput" aria-describedby="nameHelp" required minlength="1" th:field="*{name}">
-                        </div>
-                        <div class="form-group">
-                            <label for="hostnameInput">Host of the Database Connection</label>
-                            <input type="text" class="form-control" id="hostnameInput" required minlength="1" th:field="*{host}">
-                        </div>
-                        <div class="form-group">
-                            <label for="portInput">Port of the Database Connection</label>
-                            <input type="number" class="form-control" id="portInput" required minlength="1" th:field="*{port}">
-                        </div>
-                        <div class="form-group">
-                            <label for="databaseInput">Database of the Database Connection</label>
-                            <input type="text" class="form-control" id="databaseInput" required minlength="1" th:field="*{database}">
-                        </div>
-                        <div class="form-group">
-                            <label for="usernameInput">User Name of the Database Connection</label>
-                            <input type="text" class="form-control" id="usernameInput" th:field="*{username}">
-                        </div>
-                        <div class="form-group">
-                            <label for="passwordInput">User Passoword of the Database Connection</label>
-                            <input type="password" class="form-control" id="passwordInput" th:field="*{password}">
-                        </div>
-                        <input type="submit" class="btn btn-primary" value="Submit"/> <input type="reset" class="btn btn-danger" value="Reset"/>
-                    </form>
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="display-4">
+                        <button class="btn btn-light btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+                                aria-controls="collapseOne">
+                            Details
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne">
+                    <div class="card-body">
+                        <form action="#" th:action="@{'/connections/' + ${connection.id}}" th:object="${connection}" method="post">
+                            <div class="form-group">
+                                <label for="nameInput">Name of the Database Connection</label>
+                                <input type="text" class="form-control" id="nameInput" aria-describedby="nameHelp" required minlength="1" th:field="*{name}">
+                            </div>
+                            <div class="form-group">
+                                <label for="typeInput">Type of the Database</label>
+                                <select class="form-control" id="typeInput" th:field="*{type}">
+                                    <option th:each="type : ${T(org.example.ataccama.data.DatabaseType).values()}"
+                                            th:value="${type}" th:text="${type}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hostnameInput">Host of the Database Connection</label>
+                                <input type="text" class="form-control" id="hostnameInput" required minlength="1" th:field="*{host}">
+                            </div>
+                            <div class="form-group">
+                                <label for="portInput">Port of the Database Connection</label>
+                                <input type="number" class="form-control" id="portInput" required minlength="1" th:field="*{port}">
+                            </div>
+                            <div class="form-group">
+                                <label for="databaseInput">Database of the Database Connection</label>
+                                <input type="text" class="form-control" id="databaseInput" required minlength="1" th:field="*{database}">
+                            </div>
+                            <div class="form-group">
+                                <label for="usernameInput">User Name of the Database Connection</label>
+                                <input type="text" class="form-control" id="usernameInput" th:field="*{username}">
+                            </div>
+                            <div class="form-group">
+                                <label for="passwordInput">User Password of the Database Connection</label>
+                                <input type="password" class="form-control" id="passwordInput" th:field="*{password}">
+                            </div>
+                            <input type="submit" class="btn btn-primary" value="Submit"/> <input type="reset" class="btn btn-danger" value="Reset"/>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<hr class="border-top"/>
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <table class="table table-bordered">
-            <caption>List of Database Connections</caption>
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Hostname</th>
-                <th scope="col">Port</th>
-                <th scope="col">Database Name</th>
-                <th scope="col">User Name</th>
-                <th/>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="con,iter : ${connections}">
-                <td th:text="${iter.index + 1}"/>
-                <td th:text="${con.name}"/>
-                <td th:text="${con.host}"/>
-                <td th:text="${con.port}"/>
-                <td th:text="${con.database}"/>
-                <td th:text="${con.username}"/>
-                <td>
-                    <a th:href="@{'/connection/' + ${con.id}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
-                    <button type="button" class="btn btn-danger" th:onclick="'deleteConnection(' + ${con.id} + ')'"><i class="bi bi-backspace"></i></button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <hr class="border-top"/>
+    <div class="row">
+        <div class="col">
+            <a th:href="@{'/connections/' + ${connection.id} + '/schemas'}" class="btn btn-primary">Schemas</a>
+            <a th:href="@{'/connections/' + ${connection.id} + '/tables'}" class="btn btn-primary">Tables</a>
+        </div>
     </div>
 </div>
 </body>
