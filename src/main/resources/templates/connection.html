@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head th:include="head :: head">
+    <title id="pageTitle">Database Connection Management</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h2 class="display-4">Database Connection Management</h2>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="/" class="btn btn-primary">Home</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">Create a Database Connection</h1>
+            <form action="#" th:action="@{/connection}" th:object="${connection}" method="post">
+                <p>Name: <input type="text" th:field="*{name}" required minlength="1"/></p>
+                <p>Hostname: <input type="text" th:field="*{hostname}" required minlength="1"/></p>
+                <p>Port: <input type="number" th:field="*{port}" required minlength="1"/></p>
+                <p>Database Name: <input type="number" th:field="*{databaseName}" required minlength="1"/></p>
+                <p>User Name: <input type="text" th:field="*{username}"/></p>
+                <p>User Password: <input type="password" th:field="*{password}"/></p>
+                <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+            </form>
+        </div>
+    </div>
+</div>
+<hr class="border-top"/>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <caption>List of Database Connections</caption>
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Hostname</th>
+                <th scope="col">Port</th>
+                <th scope="col">Database Name</th>
+                <th scope="col">User Name</th>
+                <th/>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="con,iter : ${connections}">
+                <td th:text="${iter.index + 1}"/>
+                <td th:text="${con.name}"/>
+                <td th:text="${con.hostname}"/>
+                <td th:text="${con.port}"/>
+                <td th:text="${con.databaseName}"/>
+                <td th:text="${con.username}"/>
+                <td>
+                    <button type="button" class="btn btn-primary"><i class="bi bi-eye"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

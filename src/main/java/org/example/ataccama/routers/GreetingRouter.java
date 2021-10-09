@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GreetingRouter {
     @GetMapping("/greeting")
     public void greeting(Model model) {
-        model.addAttribute("name", "ABCD");
+        model.addAttribute("name", "USER");
     }
 }
