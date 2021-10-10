@@ -1,7 +1,9 @@
-package org.example.ataccama.datasources;
+package org.example.ataccama.datasources.impl;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import org.example.ataccama.data.DatabaseConnection;
+import org.example.ataccama.datasources.CloseableDatasource;
+import org.example.ataccama.datasources.CloseableDatasourceFactory;
 import org.springframework.stereotype.Component;
 
 @Component

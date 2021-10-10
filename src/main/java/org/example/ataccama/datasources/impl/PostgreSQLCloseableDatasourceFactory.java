@@ -1,15 +1,17 @@
-package org.example.ataccama.datasources;
+package org.example.ataccama.datasources.impl;
 
 import com.google.common.primitives.Ints;
 import org.apache.commons.lang3.ArrayUtils;
 import org.example.ataccama.data.DatabaseConnection;
+import org.example.ataccama.datasources.CloseableDatasource;
+import org.example.ataccama.datasources.CloseableDatasourceFactory;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class PostgresCloseableDatasourceFactory implements CloseableDatasourceFactory {
+public class PostgreSQLCloseableDatasourceFactory implements CloseableDatasourceFactory {
     @Override
     public CloseableDatasource<?> createCloseableDatasource(DatabaseConnection databaseConnection) {
         final var pgSimpleDatasource = new PGSimpleDataSource();
@@ -20,6 +22,6 @@ public class PostgresCloseableDatasourceFactory implements CloseableDatasourceFa
             pgSimpleDatasource.setUser(databaseConnection.getUsername());
             pgSimpleDatasource.setPassword(databaseConnection.getPassword());
         }
-        return new CloseableDatasource<>(new PGSimpleDataSource(), null);
+        return new CloseableDatasource<>(pgSimpleDatasource, null);
     }
 }

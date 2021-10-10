@@ -11,6 +11,7 @@ public class Column {
     private final String name;
     @NonNull
     private final String type;
-    @NonNull
-    private final Boolean primaryKey;
+    private final Boolean nullable;
+    private final Integer columnSize;
+
 }

@@ -10,5 +10,5 @@ public class Schema {
     @NonNull
     private final String name;
     @NonNull
-    private final Integer tableCount;
+    private final Long tableCount;
 }

@@ -1,6 +1,7 @@
 package org.example.ataccama.routers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.ataccama.exceptions.DatabaseBrowseException;
 import org.example.ataccama.repos.DatabaseConnectionRepo;
 import org.example.ataccama.services.DatabaseBrowserService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 @RequestMapping("/" + CONNECTIONS_PATH + "/{" + ID_PATH_VAR + "}")
 @RequiredArgsConstructor
-public class DatabaseConnectionBrowserRouter {
+public class DatabaseConnectionBrowseRouter {
     private static final String SCHEMAS_PATH = "schemas";
     private static final String TABLES_PATH = "tables";
     private static final String TABLE_PATH_VAR = "table";
@@ -31,7 +32,7 @@ public class DatabaseConnectionBrowserRouter {
 
     @GetMapping(value = "/" + SCHEMAS_PATH, //
             produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> readAllSchemas(@PathVariable Long id) {
+    public ResponseEntity<?> readAllSchemas(@PathVariable Long id) throws DatabaseBrowseException {
         final var databaseConnection = databaseConnectionRepo.findById(id);
         if (databaseConnection.isEmpty()) {
             return notFound().build();
@@ -43,7 +44,7 @@ public class DatabaseConnectionBrowserRouter {
     @GetMapping(value = "/" + TABLES_PATH, //
             produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readAllTables(@PathVariable Long id, //
-                                           @RequestParam String schema) {
+                                           @RequestParam(required = false) String schema) throws DatabaseBrowseException {
         final var databaseConnection = databaseConnectionRepo.findById(id);
         if (databaseConnection.isEmpty()) {
             return notFound().build();
@@ -55,8 +56,8 @@ public class DatabaseConnectionBrowserRouter {
     @GetMapping(value = "/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + COLUMNS_PATH, //
             produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readAllTableColumns(@PathVariable Long id, //
-                                                 @RequestParam String schema, //
-                                                 @PathVariable String table) {
+                                                 @RequestParam(required = false) String schema, //
+                                                 @PathVariable String table) throws DatabaseBrowseException {
         final var databaseConnection = databaseConnectionRepo.findById(id);
         if (databaseConnection.isEmpty()) {
             return notFound().build();
@@ -68,8 +69,8 @@ public class DatabaseConnectionBrowserRouter {
     @GetMapping(value = "/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + DATA,//
             produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readTableData(@PathVariable Long id, //
-                                           @RequestParam String schema, //
-                                           @PathVariable String table) {
+                                           @RequestParam(required = false) String schema, //
+                                           @PathVariable String table) throws DatabaseBrowseException {
         final var databaseConnection = databaseConnectionRepo.findById(id);
         if (databaseConnection.isEmpty()) {
             return notFound().build();

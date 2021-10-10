@@ -13,10 +13,5 @@ public class Table {
     @NonNull
     private final String name;
     @NonNull
-    @Builder.Default
-    private final List<Column> columns = List.of();
-
-    public int getColumnCount() {
-        return columns.size();
-    }
+    private final Long columnCount;
 }
