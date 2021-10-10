@@ -2,6 +2,7 @@ package org.example.ataccama.services;
 
 import org.example.ataccama.data.DatabaseConnection;
 import org.example.ataccama.services.data.Column;
+import org.example.ataccama.services.data.Row;
 import org.example.ataccama.services.data.Schema;
 import org.example.ataccama.services.data.Table;
 
@@ -13,4 +14,6 @@ public interface DatabaseBrowserService {
     List<Table> getTables(DatabaseConnection databaseConnection, String schema);
 
     List<Column> getColumns(DatabaseConnection databaseConnection, String schema, String table);
+
+    List<Row> getRows(DatabaseConnection databaseConnection, String schema, String table);
 }

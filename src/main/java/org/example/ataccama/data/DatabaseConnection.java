@@ -21,8 +21,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @ToString
 public class DatabaseConnection {
     public static final String NAME_COLUMN = "name";
