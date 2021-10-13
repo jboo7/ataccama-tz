@@ -291,25 +291,7 @@ public abstract class CommonDatabaseBrowseService implements DatabaseBrowserServ
         }
     }
 
-    ColumnStatistic getColumnStatisticInternal(Connection connection, String schema, String table, String column) throws SQLException {
-        final var sql = String.format("select min(%2$s), max(%2$s), avg(%2$s), median(%2$s) from %1$s", getFullTableName(schema, table), column);
-        try (final var ps = connection.prepareStatement(sql)) {
-            final var columnStatisticBuilder = ColumnStatistic.builder()
-                                                              .schema(schema != null ? schema.toLowerCase(Locale.ROOT) : null)
-                                                              .table(table.toLowerCase(Locale.ROOT))
-                                                              .name(column.toLowerCase(Locale.ROOT));
-            try (final var rs = ps.executeQuery()) {
-                rs.next();
-                return columnStatisticBuilder.min(rs.getObject(1))
-                                             .max(rs.getObject(2))
-                                             .avg(rs.getObject(3))
-                                             .median(rs.getObject(4))
-                                             .build();
-            } catch (SQLException e) {
-                return columnStatisticBuilder.build();
-            }
-        }
-    }
+    abstract ColumnStatistic getColumnStatisticInternal(Connection connection, String schema, String table, String column) throws SQLException;
 
     static String getFullTableName(String schemaName, String tableName) {
         if (schemaName != null) {
