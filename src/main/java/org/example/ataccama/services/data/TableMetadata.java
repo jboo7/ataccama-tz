@@ -6,9 +6,8 @@ import lombok.NonNull;
 
 @Getter
 @Builder
-public class Schema {
+public class TableMetadata {
+    private final String schema;
     @NonNull
     private final String name;
-    @NonNull
-    private final Long tableCount;
 }

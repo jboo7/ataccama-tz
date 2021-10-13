@@ -8,6 +8,7 @@ import org.example.ataccama.services.DatabaseBrowserService;
 import org.example.ataccama.services.DatabaseConnectionService;
 import org.example.ataccama.services.impl.DatabaseConnectionServiceImpl;
 import org.example.ataccama.services.impl.DelegatingDatabaseConnectionBrowseService;
+import org.example.ataccama.services.impl.MySQLDatabaseBrowseService;
 import org.example.ataccama.services.impl.PostgreSQLDatabaseBrowseService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,7 +41,9 @@ public class Application {
     }
 
     @Bean
-    public DatabaseBrowserService databaseBrowserService(PostgreSQLDatabaseBrowseService postgreSQLDatabaseBrowseService) {
-        return new DelegatingDatabaseConnectionBrowseService(Map.of(POSTGRES, postgreSQLDatabaseBrowseService));
+    public DatabaseBrowserService databaseBrowserService(PostgreSQLDatabaseBrowseService postgreSQLDatabaseBrowseService, //
+                                                         MySQLDatabaseBrowseService mySQLDatabaseBrowseService) {
+        return new DelegatingDatabaseConnectionBrowseService(Map.of(POSTGRES, postgreSQLDatabaseBrowseService,
+                                                                    MYSQL, mySQLDatabaseBrowseService));
     }
 }

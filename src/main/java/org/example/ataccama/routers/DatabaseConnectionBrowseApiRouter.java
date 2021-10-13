@@ -11,21 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.example.ataccama.routers.DatabaseConnectionRouter.CONNECTIONS_PATH;
-import static org.example.ataccama.routers.DatabaseConnectionRouter.ID_PATH_VAR;
+import static org.example.ataccama.routers.DatabaseConnectionApiRouter.CONNECTIONS_PATH;
+import static org.example.ataccama.routers.DatabaseConnectionApiRouter.ID_PATH_VAR;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/" + CONNECTIONS_PATH + "/{" + ID_PATH_VAR + "}")
+@RequestMapping("/api/" + CONNECTIONS_PATH + "/{" + ID_PATH_VAR + "}")
 @RequiredArgsConstructor
-public class DatabaseConnectionBrowseRouter {
+public class DatabaseConnectionBrowseApiRouter {
     private static final String SCHEMAS_PATH = "schemas";
     private static final String TABLES_PATH = "tables";
     private static final String TABLE_PATH_VAR = "table";
     private static final String COLUMNS_PATH = "columns";
-    private static final String DATA = "data";
+    private static final String DATA_PATH = "data";
+    private static final String STATS_PATH = "stats";
 
     private final DatabaseConnectionRepo databaseConnectionRepo;
     private final DatabaseBrowserService databaseBrowserService;
@@ -37,7 +38,7 @@ public class DatabaseConnectionBrowseRouter {
         if (databaseConnection.isEmpty()) {
             return notFound().build();
         }
-        final var schemas = databaseBrowserService.getSchemas(databaseConnection.get());
+        final var schemas = databaseBrowserService.getSchemasMetadata(databaseConnection.get());
         return ok(schemas);
     }
 
@@ -49,7 +50,7 @@ public class DatabaseConnectionBrowseRouter {
         if (databaseConnection.isEmpty()) {
             return notFound().build();
         }
-        final var tables = databaseBrowserService.getTables(databaseConnection.get(), schema);
+        final var tables = databaseBrowserService.getTablesMetadata(databaseConnection.get(), schema);
         return ok(tables);
     }
 
@@ -62,11 +63,11 @@ public class DatabaseConnectionBrowseRouter {
         if (databaseConnection.isEmpty()) {
             return notFound().build();
         }
-        final var columns = databaseBrowserService.getColumns(databaseConnection.get(), schema, table);
+        final var columns = databaseBrowserService.getColumnsMetadata(databaseConnection.get(), schema, table);
         return ok(columns);
     }
 
-    @GetMapping(value = "/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + DATA,//
+    @GetMapping(value = "/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + DATA_PATH,//
             produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readTableData(@PathVariable Long id, //
                                            @RequestParam(required = false) String schema, //
@@ -75,7 +76,30 @@ public class DatabaseConnectionBrowseRouter {
         if (databaseConnection.isEmpty()) {
             return notFound().build();
         }
-        final var rows = databaseBrowserService.getRows(databaseConnection.get(), schema, table);
-        return ok(rows);
+        final var data = databaseBrowserService.getTableDataPreview(databaseConnection.get(), schema, table);
+        return ok(data);
+    }
+
+    @GetMapping("/" + TABLES_PATH + "/" + STATS_PATH)
+    public ResponseEntity<?> readTablesStatistic(@PathVariable Long id, //
+                                                 @RequestParam(required = false) String schema) throws DatabaseBrowseException {
+        final var databaseConnection = databaseConnectionRepo.findById(id);
+        if (databaseConnection.isEmpty()) {
+            return notFound().build();
+        }
+        final var tablesStatistic = databaseBrowserService.getTablesStatistic(databaseConnection.get(), schema);
+        return ok(tablesStatistic);
+    }
+
+    @GetMapping("/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + STATS_PATH)
+    public ResponseEntity<?> readColumnsStatistic(@PathVariable Long id, //
+                                                  @RequestParam(required = false) String schema, //
+                                                  @PathVariable String table) throws DatabaseBrowseException {
+        final var databaseConnection = databaseConnectionRepo.findById(id);
+        if (databaseConnection.isEmpty()) {
+            return notFound().build();
+        }
+        final var columnsStatistic = databaseBrowserService.getColumnsStatistic(databaseConnection.get(), schema, table);
+        return ok(columnsStatistic);
     }
 }

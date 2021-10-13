@@ -5,36 +5,47 @@ import org.example.ataccama.data.DatabaseConnection;
 import org.example.ataccama.data.DatabaseType;
 import org.example.ataccama.exceptions.DatabaseBrowseException;
 import org.example.ataccama.services.DatabaseBrowserService;
-import org.example.ataccama.services.data.Column;
-import org.example.ataccama.services.data.Row;
-import org.example.ataccama.services.data.Schema;
-import org.example.ataccama.services.data.Table;
+import org.example.ataccama.services.data.ColumnsMetadata;
+import org.example.ataccama.services.data.ColumnsStatistic;
+import org.example.ataccama.services.data.SchemasMetadata;
+import org.example.ataccama.services.data.TableDataPreview;
+import org.example.ataccama.services.data.TablesMetadata;
+import org.example.ataccama.services.data.TablesStatistic;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class DelegatingDatabaseConnectionBrowseService implements DatabaseBrowserService {
+public final class DelegatingDatabaseConnectionBrowseService implements DatabaseBrowserService {
     private final Map<DatabaseType, DatabaseBrowserService> databaseBrowserServiceMap;
 
     @Override
-    public List<Schema> getSchemas(DatabaseConnection databaseConnection) throws DatabaseBrowseException {
-        return getTargetService(databaseConnection.getType()).getSchemas(databaseConnection);
+    public SchemasMetadata getSchemasMetadata(DatabaseConnection databaseConnection) throws DatabaseBrowseException {
+        return getTargetService(databaseConnection.getType()).getSchemasMetadata(databaseConnection);
     }
 
     @Override
-    public List<Table> getTables(DatabaseConnection databaseConnection, String schema) throws DatabaseBrowseException {
-        return getTargetService(databaseConnection.getType()).getTables(databaseConnection, schema);
+    public TablesMetadata getTablesMetadata(DatabaseConnection databaseConnection, String schema) throws DatabaseBrowseException {
+        return getTargetService(databaseConnection.getType()).getTablesMetadata(databaseConnection, schema);
     }
 
     @Override
-    public List<Column> getColumns(DatabaseConnection databaseConnection, String schema, String table) throws DatabaseBrowseException {
-        return getTargetService(databaseConnection.getType()).getColumns(databaseConnection, schema, table);
+    public ColumnsMetadata getColumnsMetadata(DatabaseConnection databaseConnection, String schema, String table) throws DatabaseBrowseException {
+        return getTargetService(databaseConnection.getType()).getColumnsMetadata(databaseConnection, schema, table);
     }
 
     @Override
-    public List<Row> getRows(DatabaseConnection databaseConnection, String schema, String table) throws DatabaseBrowseException {
-        return getTargetService(databaseConnection.getType()).getRows(databaseConnection, schema, table);
+    public TableDataPreview getTableDataPreview(DatabaseConnection databaseConnection, String schema, String table) throws DatabaseBrowseException {
+        return getTargetService(databaseConnection.getType()).getTableDataPreview(databaseConnection, schema, table);
+    }
+
+    @Override
+    public TablesStatistic getTablesStatistic(DatabaseConnection databaseConnection, String schema) throws DatabaseBrowseException {
+        return getTargetService(databaseConnection.getType()).getTablesStatistic(databaseConnection, schema);
+    }
+
+    @Override
+    public ColumnsStatistic getColumnsStatistic(DatabaseConnection databaseConnection, String schema, String table) throws DatabaseBrowseException {
+        return getTargetService(databaseConnection.getType()).getColumnsStatistic(databaseConnection, schema, table);
     }
 
     private DatabaseBrowserService getTargetService(DatabaseType databaseType) throws DatabaseBrowseException {

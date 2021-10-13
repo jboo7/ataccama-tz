@@ -20,7 +20,7 @@ import java.net.URI;
 import static org.example.ataccama.data.DatabaseConnection.DATABASE_COLUMN;
 import static org.example.ataccama.data.DatabaseConnection.HOST_COLUMN;
 import static org.example.ataccama.data.DatabaseConnection.NAME_COLUMN;
-import static org.example.ataccama.routers.DatabaseConnectionRouter.CONNECTIONS_PATH;
+import static org.example.ataccama.routers.DatabaseConnectionApiRouter.CONNECTIONS_PATH;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -29,10 +29,10 @@ import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/" + CONNECTIONS_PATH)
+@RequestMapping("/api/" + CONNECTIONS_PATH)
 @Slf4j
 @RequiredArgsConstructor
-public class DatabaseConnectionRouter {
+public class DatabaseConnectionApiRouter {
     public static final String CONNECTIONS_PATH = "connections";
     public static final String ID_PATH_VAR = "id";
 

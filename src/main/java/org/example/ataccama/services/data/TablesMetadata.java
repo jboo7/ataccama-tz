@@ -8,9 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class Row {
+public class TablesMetadata {
     @NonNull
-    private final Integer index;
-    @NonNull
-    private final List<Object> values;
+    private final List<TableMetadata> tableMetadata;
 }

@@ -8,10 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class Table {
-    private final String schema;
+public class SchemasMetadata {
     @NonNull
-    private final String name;
-    @NonNull
-    private final Long columnCount;
+    private final List<SchemaMetadata> schemaMetadata;
 }

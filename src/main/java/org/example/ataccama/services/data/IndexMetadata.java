@@ -4,14 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Getter
 @Builder
-public class Column {
+public class IndexMetadata {
     @NonNull
     private final String name;
     @NonNull
-    private final String type;
-    private final Boolean nullable;
-    private final Integer columnSize;
-
+    private final List<IndexedColumn> columns;
 }
