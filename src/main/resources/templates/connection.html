@@ -5,7 +5,7 @@
 </head>
 <body>
 <div class="jumbotron">
-    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.name}">Database Connection:</h2>
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name}"></h2>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -16,6 +16,15 @@
     </nav>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="btn-group" role="group">
+                <a class="btn btn-outline-primary" th:if="${connection.type.isSchemasSupported()}" th:href="@{'/connections/' + ${connection.id} + '/schemas'}">View Database Schemas</a>
+                <a class="btn btn-outline-primary" th:if="${!connection.type.isSchemasSupported()}" th:href="@{'/connections/' + ${connection.id} + '/tables'}">View Database Tables</a>
+            </div>
+        </div>
+    </div>
+    <hr class="border-top"/>
     <div class="row">
         <div class="col">
             <div class="card">
@@ -67,13 +76,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <hr class="border-top"/>
-    <div class="row">
-        <div class="col">
-            <a th:href="@{'/connections/' + ${connection.id} + '/schemas'}" class="btn btn-primary">Schemas</a>
-            <a th:href="@{'/connections/' + ${connection.id} + '/tables'}" class="btn btn-primary">Tables</a>
         </div>
     </div>
 </div>

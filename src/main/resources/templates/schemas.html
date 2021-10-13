@@ -5,7 +5,7 @@
 </head>
 <body>
 <div class="jumbotron">
-    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.name}">Database Connection:</h2>
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - Schemas'"></h2>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -17,6 +17,33 @@
     </nav>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col-2">
+            <table class="table table-bordered">
+                <caption>List of Database Schemas</caption>
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Schema Name</th>
+                    <th scope="col">Tables View</th>
+                    <th scope="col">Tables Stats</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="schema,iter : ${schemas}">
+                    <td th:text="${iter.index + 1}"/>
+                    <td th:text="${schema.name}"/>
+                    <td>
+                        <a th:href="@{'/connections/' + ${connection.id} + '/tables?schema=' + ${schema.name}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/connections/' + ${connection.id} + '/tables/stats?schema=' + ${schema.name}}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

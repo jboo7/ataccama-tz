@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head th:include="head :: head">
+        <title id="pageTitle">Table Statistics</title>
+    </head>
+</head>
+<body>
+<div class="jumbotron">
+    <h2 class="display-4" th:if="${schema} != null" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - ' + ${schema} + ' - Tables Statistics'"></h2>
+    <h2 class="display-4" th:if="${schema} == null" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - Tables Statistics'"></h2>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/connections">Database Connection Management</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a th:href="@{'/connections/' + ${connection.id}}" th:text="${connection.name}"></a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} != null"><a th:href="@{'/connections/' + ${connection.id} + '/schemas'}">Schemas</a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} != null"><a th:href="@{'/connections/' + ${connection.id} + '/tables?schema=' + ${schema}}" th:text="${schema}"></a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} == null"><a th:href="@{'/connections/' + ${connection.id} + '/tables'}">Tables</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tables Statistics</li>
+        </ol>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered">
+                <caption th:if="${schema} != null" th:text="'Tables Stats - ' + ${schema} + ' - ' + ${table}"></caption>
+                <caption th:if="${schema} == null" th:text="'Tables Stats - ' + ${table}"></caption>
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Table Name</th>
+                    <th scope="col">Column Count</th>
+                    <th scope="col">Row Count</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tableStats,iter : ${tablesStats.tablesStatistic}">
+                    <td th:text="${iter.index + 1}"></td>
+                    <td th:text="${tableStats.name}"></td>
+                    <td th:text="${tableStats.columnCount}"></td>
+                    <td th:text="${tableStats.rowCount}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

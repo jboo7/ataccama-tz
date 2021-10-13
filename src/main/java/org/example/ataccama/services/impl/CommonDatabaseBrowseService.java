@@ -11,7 +11,6 @@ import org.example.ataccama.services.data.ColumnStatistic;
 import org.example.ataccama.services.data.ColumnsMetadata;
 import org.example.ataccama.services.data.ColumnsStatistic;
 import org.example.ataccama.services.data.IndexMetadata;
-import org.example.ataccama.services.data.IndexedColumn;
 import org.example.ataccama.services.data.PrimaryKeyMetadata;
 import org.example.ataccama.services.data.SchemaMetadata;
 import org.example.ataccama.services.data.SchemasMetadata;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import static java.util.Collections.unmodifiableList;
@@ -92,28 +92,22 @@ public abstract class CommonDatabaseBrowseService implements DatabaseBrowserServ
             // collecting column metadata
             final var columnsMetadata = getColumnsMetadataInternal(connection, schema, table);
             // collecting primary keys metadata
-            final var primaryKeysMap = new HashMap<String, List<IndexedColumn>>();
+            final var primaryKeysMap = new HashMap<String, TreeMap<Short, String>>();
             while (primaryKeysRs.next()) {
                 final var columnName = primaryKeysRs.getString(COLUMN_NAME_COLUMN);
                 final var keySeq = primaryKeysRs.getShort(KEY_SEQ_COLUMN);
                 final var pkName = primaryKeysRs.getString(PK_NAME_COLUMN);
-                primaryKeysMap.computeIfAbsent(pkName, k -> new ArrayList<>())
-                              .add(IndexedColumn.builder()
-                                                .name(columnName)
-                                                .ordinal((int) keySeq)
-                                                .build());
+                primaryKeysMap.computeIfAbsent(pkName, k -> new TreeMap<>())
+                              .put(keySeq, columnName);
             }
             // collecting indices metadata
-            final var indexMap = new HashMap<String, List<IndexedColumn>>();
+            final var indexMap = new HashMap<String, TreeMap<Short, String>>();
             while (indicesRs.next()) {
                 final var indexName = indicesRs.getString(INDEX_NAME_COLUMN);
                 final var columnName = indicesRs.getString(COLUMN_NAME_COLUMN);
                 final var ordinalPosition = indicesRs.getShort(ORDINAL_POSITION_COLUMN);
-                indexMap.computeIfAbsent(indexName, k -> new ArrayList<>())
-                        .add(IndexedColumn.builder()
-                                          .name(columnName)
-                                          .ordinal((int) ordinalPosition)
-                                          .build());
+                indexMap.computeIfAbsent(indexName, k -> new TreeMap<>())
+                        .put(ordinalPosition, columnName);
             }
             return ColumnsMetadata.builder()
                                   .columnMetadata(columnsMetadata.sorted(comparing(ColumnMetadata::getOrdinal))
@@ -122,10 +116,10 @@ public abstract class CommonDatabaseBrowseService implements DatabaseBrowserServ
                                                                     .stream()
                                                                     .map(e -> PrimaryKeyMetadata.builder()
                                                                                                 .name(e.getKey())
-                                                                                                .columns(e.getValue()
-                                                                                                          .stream()
-                                                                                                          .sorted(comparing(IndexedColumn::getOrdinal))
-                                                                                                          .collect(toUnmodifiableList()))
+                                                                                                .columnNames(e.getValue()
+                                                                                                              .values()
+                                                                                                              .stream()
+                                                                                                              .collect(toUnmodifiableList()))
                                                                                                 .build())
                                                                     .sorted(comparing(PrimaryKeyMetadata::getName, nullsFirst(naturalOrder())))
                                                                     .collect(toUnmodifiableList()))
@@ -134,10 +128,10 @@ public abstract class CommonDatabaseBrowseService implements DatabaseBrowserServ
                                                          .filter(e -> !primaryKeysMap.containsKey(e.getKey()))
                                                          .map(e -> IndexMetadata.builder()
                                                                                 .name(e.getKey())
-                                                                                .columns(e.getValue()
-                                                                                          .stream()
-                                                                                          .sorted(comparing(IndexedColumn::getOrdinal))
-                                                                                          .collect(toUnmodifiableList()))
+                                                                                .columnNames(e.getValue()
+                                                                                              .values()
+                                                                                              .stream()
+                                                                                              .collect(toUnmodifiableList()))
                                                                                 .build())
                                                          .sorted(comparing(IndexMetadata::getName))
                                                          .collect(toUnmodifiableList()))
@@ -213,9 +207,9 @@ public abstract class CommonDatabaseBrowseService implements DatabaseBrowserServ
                                                                                                                          .getName()));
             }
             return ColumnsStatistic.builder()
-                                   .columnsStatisticMap(columnsStatisticStreamBuilder.build()
-                                                                                     .sorted(comparing(ColumnStatistic::getName))
-                                                                                     .collect(toUnmodifiableList()))
+                                   .columnsStatistic(columnsStatisticStreamBuilder.build()
+                                                                                  .sorted(comparing(ColumnStatistic::getName))
+                                                                                  .collect(toUnmodifiableList()))
                                    .build();
         } catch (GetConnectionException e) {
             throw new DatabaseBrowseException("Failed to get a connection to datasource", e);
@@ -272,7 +266,7 @@ public abstract class CommonDatabaseBrowseService implements DatabaseBrowserServ
                                                       .name(columnName)
                                                       .type(typeName)
                                                       .ordinal(ordinalPosition)
-                                                      .nullable(nullable != null ? "NO".equalsIgnoreCase(nullable) : null)
+                                                      .nullable(nullable != null ? "YES".equalsIgnoreCase(nullable) : null)
                                                       .columnSize(columnSize)
                                                       .build());
             }

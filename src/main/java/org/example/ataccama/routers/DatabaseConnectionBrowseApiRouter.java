@@ -21,12 +21,12 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/api/" + CONNECTIONS_PATH + "/{" + ID_PATH_VAR + "}")
 @RequiredArgsConstructor
 public class DatabaseConnectionBrowseApiRouter {
-    private static final String SCHEMAS_PATH = "schemas";
-    private static final String TABLES_PATH = "tables";
-    private static final String TABLE_PATH_VAR = "table";
-    private static final String COLUMNS_PATH = "columns";
-    private static final String DATA_PATH = "data";
-    private static final String STATS_PATH = "stats";
+    public static final String SCHEMAS_PATH = "schemas";
+    public static final String TABLES_PATH = "tables";
+    public static final String TABLE_PATH_VAR = "table";
+    public static final String COLUMNS_PATH = "columns";
+    public static final String DATA_PATH = "data";
+    public static final String STATS_PATH = "stats";
 
     private final DatabaseConnectionRepo databaseConnectionRepo;
     private final DatabaseBrowserService databaseBrowserService;
@@ -80,7 +80,8 @@ public class DatabaseConnectionBrowseApiRouter {
         return ok(data);
     }
 
-    @GetMapping("/" + TABLES_PATH + "/" + STATS_PATH)
+    @GetMapping(value = "/" + TABLES_PATH + "/" + STATS_PATH, //
+            produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readTablesStatistic(@PathVariable Long id, //
                                                  @RequestParam(required = false) String schema) throws DatabaseBrowseException {
         final var databaseConnection = databaseConnectionRepo.findById(id);
@@ -91,7 +92,8 @@ public class DatabaseConnectionBrowseApiRouter {
         return ok(tablesStatistic);
     }
 
-    @GetMapping("/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + STATS_PATH)
+    @GetMapping(value = "/" + TABLES_PATH + "/{" + TABLE_PATH_VAR + "}/" + STATS_PATH, //
+            produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> readColumnsStatistic(@PathVariable Long id, //
                                                   @RequestParam(required = false) String schema, //
                                                   @PathVariable String table) throws DatabaseBrowseException {

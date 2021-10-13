@@ -73,44 +73,42 @@
             </div>
         </div>
     </div>
-</div>
-<hr class="border-top"/>
-<div class="row justify-content-center">
-    <div class="col-md-10">
-        <table class="table table-bordered">
-            <caption>List of Database Connections</caption>
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Hostname</th>
-                <th scope="col">Port</th>
-                <th scope="col">Database Name</th>
-                <th scope="col">User Name</th>
-                <th scope="col">Created At</th>
-                <th scope="col">Last Updated At</th>
-                <th/>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="con,iter : ${connections}">
-                <td th:text="${iter.index + 1}"/>
-                <td th:text="${con.name}"/>
-                <td th:text="${con.type}"/>
-                <td th:text="${con.host}"/>
-                <td th:text="${con.port}"/>
-                <td th:text="${con.database}"/>
-                <td th:text="${con.username}"/>
-                <td th:text="${con.createdAt}"/>
-                <td th:text="${con.updatedAt}"/>
-                <td>
-                    <a th:href="@{'/connections/' + ${con.id}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
-                    <button type="button" class="btn btn-danger" th:onclick="'deleteConnection(' + ${con.id} + ')'"><i class="bi bi-backspace"></i></button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <hr class="border-top"/>
+    <div class="row justify-content-center">
+        <div class="col">
+            <table class="table table-bordered">
+                <caption>List of Database Connections</caption>
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Hostname</th>
+                    <th scope="col">Port</th>
+                    <th scope="col">Database Name</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Last Updated At</th>
+                    <th/>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="con,iter : ${connections}">
+                    <td th:text="${iter.index + 1}"/>
+                    <td th:text="${con.name}"/>
+                    <td th:text="${con.type}"/>
+                    <td th:text="${con.host}"/>
+                    <td th:text="${con.port}"/>
+                    <td th:text="${con.database}"/>
+                    <td th:text="${con.username}"/>
+                    <td th:text="${con.updatedAt}"/>
+                    <td>
+                        <a th:href="@{'/connections/' + ${con.id}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
+                        <button type="button" class="btn btn-danger" th:onclick="'deleteConnection(' + ${con.id} + ')'"><i class="bi bi-backspace"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </body>

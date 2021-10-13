@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="head :: head">
+    <title id="pageTitle">Database Tables</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - ' + ${schema} + ' - Tables'" th:if="${schema} != null"></h2>
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - Tables'" th:if="${schema} == null"></h2>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/connections">Database Connection Management</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a th:href="@{'/connections/' + ${connection.id}}" th:text="${connection.name}"></a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} != null"><a th:href="@{'/connections/' + ${connection.id} + '/schemas'}">Schemas</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:if="${schema} != null" th:text="${schema}"></li>
+            <li class="breadcrumb-item active" aria-current="page" th:if="${schema} == null">Tables</li>
+        </ol>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-outline-primary" th:if="${schema} != null" th:href="@{'/connections/' + ${connection.id} + '/tables/stats?schema=' + ${schema}}">View Tables Statistics</a>
+            <a class="btn btn-outline-primary" th:if="${schema} == null" th:href="@{'/connections/' + ${connection.id} + '/tables/stats'}">View Tables Statistics</a>
+        </div>
+    </div>
+    <hr class="border-top"/>
+    <div class="row">
+        <div class="col-2">
+            <table class="table table-bordered">
+                <caption th:if="${schema} != null" th:text="'List of Database Tables - ' + ${schema}"></caption>
+                <caption th:if="${schema} == null">List of Database Tables</caption>
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" th:if="${connection.type.isSchemasSupported()}">Schema Name</th>
+                    <th scope="col">Table Name</th>
+                    <th scope="col">Columns View</th>
+                    <th scope="col">Data Preview</th>
+                    <th scope="col">Columns Stats</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="table,iter : ${tables}">
+                    <td th:text="${iter.index + 1}"/>
+                    <td th:if="${connection.type.isSchemasSupported()}" th:text="${table.schema}"/>
+                    <td th:text="${table.name}"/>
+                    <td>
+                        <a th:if="${table.schema} != null" th:href="@{'/connections/' + ${connection.id} + '/tables/' + ${table.name} + '/columns?schema=' + ${table.schema}}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
+                        <a th:if="${table.schema} == null" th:href="@{'/connections/' + ${connection.id} + '/tables/' + ${table.name} + '/columns'}" class="btn btn-primary"><i class="bi bi-eye"></i></a>
+                    </td>
+                    <td>
+                        <a th:if="${table.schema} != null" th:href="@{'/connections/' + ${connection.id} + '/tables/' + ${table.name} + '/data?schema=' + ${table.schema}}" class="btn btn-danger"><i class="bi bi-eye"></i></a>
+                        <a th:if="${table.schema} == null" th:href="@{'/connections/' + ${connection.id} + '/tables/' + ${table.name} + '/data'}" class="btn btn-danger"><i class="bi bi-eye"></i></a>
+                    </td>
+                    <td>
+                        <a th:if="${table.schema} != null" th:href="@{'/connections/' + ${connection.id} + '/tables/' + ${table.name} + '/stats?schema=' + ${table.schema}}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                        <a th:if="${table.schema} == null" th:href="@{'/connections/' + ${connection.id} + '/tables/' + ${table.name} + '/stats'}" class="btn btn-secondary"><i class="bi bi-eye"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -10,5 +10,5 @@ import java.util.List;
 @Builder
 public class ColumnsStatistic {
     @NonNull
-    private final List<ColumnStatistic> columnsStatisticMap;
+    private final List<ColumnStatistic> columnsStatistic;
 }

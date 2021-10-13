@@ -1,11 +1,9 @@
 package org.example.ataccama.data;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -51,9 +49,6 @@ public class DatabaseConnection {
     private String username;
 
     private String password;
-
-    @CreatedDate
-    private Instant createdAt;
 
     @LastModifiedDate
     private Instant updatedAt;

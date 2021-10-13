@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="head :: head">
+    <title id="pageTitle">Table Data Preview</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - ' + ${schema} + ' - ' + ${table} + ' - Table Data Preview'"
+        th:if="${schema} != null"></h2>
+    <h2 class="display-4" th:text="'Database Connection: ' + ${connection.type} + ' ' + ${connection.name} + ' - ' + ${table} + ' - Table Data Preview'" th:if="${schema} == null"></h2>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="/connections">Database Connection Management</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a th:href="@{'/connections/' + ${connection.id}}" th:text="${connection.name}"></a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} != null"><a th:href="@{'/connections/' + ${connection.id} + '/schemas'}">Schemas</a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} != null"><a th:href="@{'/connections/' + ${connection.id} + '/tables?schema=' + ${schema}}" th:text="${schema}"></a></li>
+            <li class="breadcrumb-item" aria-current="page" th:if="${schema} == null"><a th:href="@{'/connections/' + ${connection.id} + '/tables'}">Tables</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${table} + ' - Table Data Preview'"></li>
+        </ol>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col overflow-auto">
+            <table class="table table-bordered">
+                <caption th:if="${schema} != null" th:text="'Table Data Preview - ' + ${schema} + ' - ' + ${table}"></caption>
+                <caption th:if="${schema} == null" th:text="'Table Data Preview - ' + ${table}"></caption>
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th th:each="col : ${data.columnNames}" th:text="${col}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row,iter : ${data.rows}">
+                    <td th:text="${iter.index + 1}"></td>
+                    <td th:each="value : ${row.values}" th:text="${value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

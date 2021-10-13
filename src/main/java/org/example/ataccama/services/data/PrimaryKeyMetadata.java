@@ -11,5 +11,5 @@ import java.util.List;
 public class PrimaryKeyMetadata {
     private final String name;
     @NonNull
-    private final List<IndexedColumn> columns;
+    private final List<String> columnNames;
 }
